@@ -35,4 +35,9 @@ jobs:
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create $env:GITHUB_REF_NAME dist/CS2Tasks.exe dist/CS2Tasks.exe.sha256 --verify-tag --draft --generate-notes
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $notes = ".github/release-notes/$tag.md"
+          $notesArgs = if (Test-Path -LiteralPath $notes) { @('--notes-file', $notes) } else { @('--generate-notes') }
+          gh release create $tag dist/CS2Tasks.exe dist/CS2Tasks.exe.sha256 --verify-tag --draft --title $tag.Substring(1) @notesArgs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
