@@ -1,0 +1,337 @@
+{
+  "port": 3000,
+  "overlayLanAddress": "",
+  "gsiToken": "",
+  "cs2CfgPath": "",
+  "allowedModes": [],
+  "openPanelOnStart": true,
+  "tasks": {
+    "count": 3,
+    "maxActive": 6,
+    "difficultyMix": {
+      "easy": 1,
+      "medium": 1,
+      "hard": 1
+    },
+    "autoGenerateOnMatchStart": true,
+    "replaceCompleted": true,
+    "replaceSkipped": true,
+    "reserveWhenFull": true,
+    "situational": true,
+    "mode": "classic",
+    "points": {
+      "goal": 1500,
+      "easy": 100,
+      "medium": 200,
+      "hard": 350,
+      "extra": 25,
+      "skipPenalty": 50
+    }
+  },
+  "sounds": {
+    "volume": 0.8,
+    "skip": "skip.mp3",
+    "complete": "complete.mp3",
+    "playOnComplete": true,
+    "playOnFail": false
+  },
+  "overlay": {
+    "showHeader": true,
+    "showCounter": true,
+    "showCompletedFor": 4
+  },
+  "input": {
+    "enabled": true,
+    "sensitivity": 0,
+    "spinWithinMs": 1000,
+    "killAfterSpinMs": 1000,
+    "jumpKillMs": 750
+  },
+  "twitch": {
+    "taskVoting": false,
+    "voteAllowedRoles": ["everyone"],
+    "enabled": false,
+    "channel": "",
+    "oauthToken": "",
+    "botUsername": "",
+    "command": "!task",
+    "cooldownSec": 120,
+    "maxQueue": 20,
+    "allowedRoles": [
+      "everyone"
+    ],
+    "bannedWords": [],
+    "aliases": {
+      "hs": {
+        "type": "headshots",
+        "param": "count"
+      },
+      "kills": {
+        "type": "kills",
+        "param": "count"
+      },
+      "deagle": {
+        "type": "weapon_kills",
+        "params": {
+          "weapon": "weapon_deagle"
+        },
+        "param": "count"
+      },
+      "awp": {
+        "type": "weapon_kills",
+        "params": {
+          "weapon": "weapon_awp"
+        },
+        "param": "count"
+      },
+      "ak": {
+        "type": "weapon_kills",
+        "params": {
+          "weapon": "weapon_ak47"
+        },
+        "param": "count"
+      },
+      "scout": {
+        "type": "weapon_kills",
+        "params": {
+          "weapon": "weapon_ssg08"
+        },
+        "param": "count"
+      },
+      "knife": {
+        "type": "weapon_kills",
+        "params": {
+          "weapon": "weapon_knife"
+        },
+        "param": "count"
+      },
+      "zeus": {
+        "type": "weapon_kills",
+        "params": {
+          "weapon": "weapon_taser"
+        },
+        "param": "count"
+      },
+      "pistol": {
+        "type": "weapon_type_kills",
+        "params": {
+          "weaponType": "Pistol"
+        },
+        "param": "count"
+      },
+      "shotgun": {
+        "type": "weapon_type_kills",
+        "params": {
+          "weaponType": "Shotgun"
+        },
+        "param": "count"
+      },
+      "ace": {
+        "type": "ace"
+      },
+      "mvp": {
+        "type": "mvps",
+        "param": "count"
+      },
+      "assist": {
+        "type": "assists",
+        "param": "count"
+      },
+      "survive": {
+        "type": "survive_rounds",
+        "param": "count"
+      },
+      "flash": {
+        "type": "flashed_kills",
+        "param": "count"
+      },
+      "win": {
+        "type": "win_match"
+      },
+      "360": {
+        "type": "spin_kills",
+        "param": "count"
+      },
+      "jump": {
+        "type": "jump_kills",
+        "param": "count"
+      },
+      "noscope": {
+        "type": "noscope_kills",
+        "param": "count"
+      },
+      "streak": {
+        "type": "kill_streak",
+        "param": "count"
+      },
+      "alive": {
+        "type": "survival_streak",
+        "param": "count"
+      },
+      "winstreak": {
+        "type": "win_streak",
+        "param": "count"
+      },
+      "fullhp": {
+        "type": "full_hp_kill_rounds",
+        "param": "count"
+      },
+      "smoke": {
+        "type": "smoked_kills",
+        "param": "count"
+      },
+      "fire": {
+        "type": "burning_kills",
+        "param": "count"
+      },
+      "weapons": {
+        "type": "different_weapon_round",
+        "param": "count"
+      },
+      "ecowin": {
+        "type": "eco_round_wins",
+        "param": "count"
+      },
+      "jumpns": {
+        "type": "combo_kills",
+        "params": {
+          "combo": "jump_noscope"
+        },
+        "param": "count"
+      },
+      "360ns": {
+        "type": "combo_kills",
+        "params": {
+          "combo": "spin_noscope"
+        },
+        "param": "count"
+      },
+      "360jump": {
+        "type": "combo_kills",
+        "params": {
+          "combo": "spin_jump"
+        },
+        "param": "count"
+      },
+      "360jumpns": {
+        "type": "combo_kills",
+        "params": {
+          "combo": "spin_jump_noscope"
+        },
+        "param": "count"
+      },
+      "jumphs": {
+        "type": "combo_kills",
+        "params": {
+          "combo": "jump_headshot"
+        },
+        "param": "count"
+      },
+      "jumpflash": {
+        "type": "combo_kills",
+        "params": {
+          "combo": "jump_flashed"
+        },
+        "param": "count"
+      },
+      "nshs": {
+        "type": "combo_kills",
+        "params": {
+          "combo": "noscope_headshot"
+        },
+        "param": "count"
+      },
+      "nsflash": {
+        "type": "combo_kills",
+        "params": {
+          "combo": "noscope_flashed"
+        },
+        "param": "count"
+      },
+      "smokehs": {
+        "type": "combo_kills",
+        "params": {
+          "combo": "smoke_headshot"
+        },
+        "param": "count"
+      },
+      "firehs": {
+        "type": "combo_kills",
+        "params": {
+          "combo": "fire_headshot"
+        },
+        "param": "count"
+      },
+      "lowhphs": {
+        "type": "combo_kills",
+        "params": {
+          "combo": "lowhp_headshot"
+        },
+        "param": "count"
+      },
+      "lastbullet": {
+        "type": "last_bullet_kills",
+        "param": "count"
+      }
+    }
+  },
+  "debug": {
+    "recordGsi": false,
+    "logLevel": "info"
+  },
+  "bonuses": {
+    "enabled": true,
+    "showTotal": true,
+    "animation": "scale",
+    "scaleFrom": 1.8,
+    "base": 50,
+    "comboWindowMs": 5000,
+    "mergeMs": 200,
+    "comboStep": 0.2,
+    "bonusMultiplier": 1,
+    "fadeInMs": 150,
+    "holdMs": 850,
+    "fadeOutMs": 550,
+    "size": 35,
+    "x": 50,
+    "y": 35,
+    "color": "#ffdc64",
+    "points": {
+      "headshot": 100,
+      "air": 250,
+      "knife": 300,
+      "smoke": 200,
+      "blind": 200,
+      "noscope": 500,
+      "spin": 400,
+      "inspect": 50,
+      "graffiti": 75
+    },
+    "risk": {
+      "enabled": true,
+      "step": 0.25,
+      "maxMultiplier": 3,
+      "lowHp": 20
+    },
+    "diversity": {
+      "enabled": true,
+      "step": 50,
+      "maxBonus": 200
+    }
+  },
+  "obs": {
+    "enabled": false,
+    "port": 4455,
+    "password": ""
+  },
+  "summary": {
+    "enabled": true,
+    "showSeconds": 20
+  },
+  "language": "en",
+  "lowHealth": {
+    "enabled": true,
+    "volume": 0.65,
+    "obsSource": ""
+  }
+}

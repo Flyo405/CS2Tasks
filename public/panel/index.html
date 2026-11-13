@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <link rel="icon" href="/shared/cs2tasks.ico" sizes="any">
+  <meta charset="utf-8">
+  <title>CS2 Tasks — панель</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/panel/panel.css">
+  <link rel="stylesheet" href="/shared/theme.css">
+  <link rel="stylesheet" href="/shared/bingo.css">
+  <link rel="stylesheet" href="/shared/task-vote.css">
+</head>
+<body class="cs-panel">
+  <header class="topbar">
+    <div class="brand">CS2 <span>Tasks</span></div>
+    <label class="language-picker"><span>LANG</span><select id="app-language" aria-label="Language"><option value="ru">RU</option><option value="en">EN</option></select></label>
+    <nav class="tabs" id="tabs">
+      <button data-tab="match" class="active">Матч</button>
+      <button data-tab="templates">Шаблоны</button>
+      <button data-tab="history">История</button>
+      <button data-tab="reports">Итоги матчей</button>
+      <button data-tab="settings">Настройки</button>
+      <button data-tab="gsi">GSI и OBS</button>
+    </nav>
+    <div class="pills">
+      <span class="pill" id="pill-ws">Панель</span>
+      <span class="pill" id="pill-gsi">GSI</span>
+      <span class="pill" id="pill-chat">Чат</span>
+    </div>
+  </header>
+
+  <div id="warnings"></div>
+
+  <!-- ===================== МАТЧ ===================== -->
+  <main class="tab" id="tab-match">
+    <div class="grid">
+      <section class="panel" id="match-status">
+        <h2>Матч</h2>
+        <div id="match-info" class="match-info"></div>
+        <label>Режим следующего матча
+          <select id="challenge-mode"><option value="classic">Обычные задания</option><option value="bingo">Бинго 3×3</option><option value="bingo5">Бинго 5×5</option><option value="points">Очки (набрать цель)</option></select>
+        </label>
+        <div class="actions">
+          <button class="btn primary" data-action="fill" title="Дополнить активные задания до нужного количества">Сгенерировать набор</button>
+          <button class="btn" data-action="replace" title="Убрать случайные активные задания (без звука) и сгенерировать новые">Перегенерировать всё</button>
+          <button class="btn" data-action="new-match" title="Провалить незавершённые задания и начать новый матч">Начать новый матч</button>
+        </div>
+        <div class="actions small">
+          <button class="btn ghost" data-action="sound-skip">🔊 Тест звука пропуска</button>
+          <button class="btn ghost" data-action="sound-complete">🔊 Тест звука выполнения</button>
+          <button class="btn ghost" data-action="overlay-test">🎬 Тест оверлея</button>
+        </div>
+      </section>
+
+      <section class="panel" id="queue-panel">
+        <h2>Предложения зрителей <span class="count-badge" id="queue-count"></span></h2>
+        <section id="task-vote" class="task-vote" hidden></section>
+        <div id="queue" class="list"></div>
+      </section>
+    </div>
+
+    <section id="bingo-board" class="panel" hidden></section>
+    <section id="classic-tasks" class="panel">
+      <h2>Активные задания <span class="count-badge" id="active-count"></span></h2>
+      <div id="active" class="list"></div>
+      <div id="reserve-wrap" hidden>
+        <h3>Резерв (появятся, когда освободится место)</h3>
+        <div id="reserve" class="list"></div>
+      </div>
+      <div id="finished-wrap" hidden>
+        <h3>Завершены в этом матче</h3>
+        <div id="finished" class="list"></div>
+      </div>
+    </section>
+
+    <section id="classic-add" class="panel">
+      <h2>Добавить задание</h2>
+      <div class="add-grid">
+        <form id="add-form" class="add-box">
+          <h3>Из типа</h3>
+          <label>Тип <select id="add-type"></select></label>
+          <div id="add-params" class="params"></div>
+          <div class="row">
+            <button class="btn primary" type="submit">Добавить</button>
+            <button class="btn" type="button" id="add-random">Случайное из шаблонов</button>
+          </div>
+        </form>
+        <form id="manual-form" class="add-box">
+          <h3>Своё (отмечается вручную)</h3>
+          <label>Текст <input id="manual-text" maxlength="80" placeholder="Например: выиграть раунд только с пистолетом" required></label>
+          <label>Сколько раз <input id="manual-count" type="number" min="1" max="100" value="1"></label>
+          <div class="row"><button class="btn primary" type="submit">Добавить своё</button></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== ШАБЛОНЫ ===================== -->
+  <main class="tab" id="tab-templates" hidden>
+    <section class="panel">
+      <h2>Шаблоны случайных заданий</h2>
+      <p class="hint">Параметры: число — фиксированное значение, <code>[мин, макс]</code> — случайное из диапазона,
+        <code>["a", "b"]</code> — случайный выбор. Пример: <code>{"weapon": ["weapon_deagle", "weapon_awp"], "count": [2, 4]}</code>.
+        Вес — насколько часто выпадает шаблон.</p>
+      <div id="tpl-errors" class="errors"></div>
+      <div class="table-wrap">
+        <table class="tpl-table">
+          <thead><tr><th>Вкл</th><th>Тип</th><th>Сложность</th><th>Вес</th><th>Параметры (JSON)</th><th></th></tr></thead>
+          <tbody id="tpl-body"></tbody>
+        </table>
+      </div>
+      <div class="row">
+        <button class="btn" id="tpl-add">+ Добавить шаблон</button>
+        <button class="btn primary" id="tpl-save">Сохранить шаблоны</button>
+        <button class="btn ghost" id="tpl-reload">Отменить изменения</button>
+      </div>
+      <details class="raw">
+        <summary>Справка по типам и параметрам</summary>
+        <div id="type-help"></div>
+      </details>
+    </section>
+  </main>
+
+  <!-- ===================== ИСТОРИЯ ===================== -->
+  <main class="tab" id="tab-history" hidden>
+    <section class="panel">
+      <h2>История за сессию</h2>
+      <p class="hint">Последние 100 заданий. Полная история хранится в <code>data/history.json</code>.</p>
+      <div class="table-wrap">
+        <table class="history">
+          <thead><tr><th>Время</th><th>Статус</th><th>Задание</th><th>Прогресс</th><th>Источник</th></tr></thead>
+          <tbody id="history-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <main class="tab" id="tab-reports" hidden>
+    <section class="panel"><h2>Итоги матчей</h2>
+      <p class="hint">Последние 20 завершённых матчей. До 100 итогов сохраняются в data/match-reports.json. Если программа подключилась посреди матча, хедшоты и серии отражают только наблюдаемую часть.</p>
+      <div id="match-reports"></div>
+    </section>
+  </main>
+
+  <!-- ===================== НАСТРОЙКИ ===================== -->
+  <main class="tab" id="tab-settings" hidden>
+    <form id="settings-form">
+      <div class="grid">
+        <section class="panel">
+          <h2>Задания</h2>
+          <label class="check"><input type="checkbox" data-path="tasks.situational"> Дополнительное ситуационное задание на раунд</label>
+          <p class="hint">12 вариантов: пистолетный раунд, эко-кил, победа на эко, без брони, снайперка, дробовик, хедшот, ассист, два убийства, 100 HP, разное оружие, выживание. Отдельная цель поверх основного набора. Пистолетные раунды — 1-й и 13-й (MR12).</p>
+          <label class="check"><input type="checkbox" data-path="summary.enabled"> Показывать итоги матча по центру экрана</label>
+          <label>Сколько секунд показывать итоги <input type="number" min="5" max="120" data-path="summary.showSeconds" data-type="int"></label>
+          <h3>Режим «Очки»</h3>
+          <p class="hint">Задания идут как в обычном режиме, но за каждое выполненное начисляются очки по сложности. Цель — набрать нужную сумму за матч. Доп. задание на раунд даёт совсем немного. Свои задания и задания от зрителей стоят как средние. Пропуск отнимает часть цены задания (счёт может уйти в минус); «Удалить» штрафа не даёт.</p>
+          <label>Цель, очков за матч <input type="number" min="1" max="1000000" data-path="tasks.points.goal" data-type="int"></label>
+          <div class="inline3">
+            <label>Лёгкое <input type="number" min="0" max="100000" data-path="tasks.points.easy" data-type="int"></label>
+            <label>Среднее <input type="number" min="0" max="100000" data-path="tasks.points.medium" data-type="int"></label>
+            <label>Сложное <input type="number" min="0" max="100000" data-path="tasks.points.hard" data-type="int"></label>
+          </div>
+          <label>Доп. задание на раунд <input type="number" min="0" max="100000" data-path="tasks.points.extra" data-type="int"></label>
+          <label>Штраф за пропуск, % от цены задания (0 — без штрафа) <input type="number" min="0" max="100" data-path="tasks.points.skipPenalty" data-type="int"></label>
+          <label>Заданий в наборе <input type="number" min="0" max="10" data-path="tasks.count" data-type="int"></label>
+          <label>Максимум активных <input type="number" min="1" max="20" data-path="tasks.maxActive" data-type="int"></label>
+          <div class="inline3">
+            <label>Лёгких <input type="number" min="0" max="10" data-path="tasks.difficultyMix.easy" data-type="num"></label>
+            <label>Средних <input type="number" min="0" max="10" data-path="tasks.difficultyMix.medium" data-type="num"></label>
+            <label>Сложных <input type="number" min="0" max="10" data-path="tasks.difficultyMix.hard" data-type="num"></label>
+          </div>
+          <label class="check"><input type="checkbox" data-path="tasks.autoGenerateOnMatchStart"> Генерировать набор в начале матча</label>
+          <label class="check"><input type="checkbox" data-path="tasks.replaceCompleted"> Заменять выполненное задание новым (заданий всегда столько, сколько в наборе)</label>
+          <label class="check"><input type="checkbox" data-path="tasks.replaceSkipped"> Заменять пропущенное задание новым</label>
+          <label class="check"><input type="checkbox" data-path="tasks.reserveWhenFull"> Если мест нет — класть одобренные в резерв</label>
+          <label>Режимы игры (через запятую, пусто = все) <input data-path="allowedModes" data-type="list" placeholder="competitive, premier"></label>
+        </section>
+        <section class="panel">
+          <h2>Звуки и оверлей</h2>
+          <label>Громкость <span class="range-wrap"><input type="range" min="0" max="1" step="0.05" data-path="sounds.volume" data-type="num"><output id="vol-out"></output></span></label>
+          <label>Звук пропуска (файл из папки sounds) <input data-path="sounds.skip"></label>
+          <label>Звук выполнения <input data-path="sounds.complete"></label>
+          <label class="check"><input type="checkbox" data-path="sounds.playOnComplete"> Звук при выполнении</label>
+          <label class="check"><input type="checkbox" data-path="sounds.playOnFail"> Позорный звук и при провале (не только при пропуске)</label>
+          <label class="check"><input type="checkbox" data-path="overlay.showHeader"> Показывать карту и счёт в оверлее</label>
+          <label class="check"><input type="checkbox" data-path="overlay.showCounter"> Показывать в оверлее счётчик выполненных заданий</label>
+          <label>Сколько секунд показывать выполненное задание перед заменой <input type="number" min="0" max="3600" data-path="overlay.showCompletedFor" data-type="num"></label>
+          <label class="check"><input type="checkbox" data-path="openPanelOnStart"> Открывать панель при запуске</label>
+        </section>
+        <section class="panel">
+          <h2>Чат Twitch</h2>
+          <label class="check"><input type="checkbox" data-path="twitch.taskVoting"> Голосование за дополнительное задание</label>
+          <label class="check"><input type="checkbox" data-path="twitch.enabled"> Включить предложения из чата</label>
+          <label>Канал <input data-path="twitch.channel" placeholder="mychannel"></label>
+          <label>Команда чата <input data-path="twitch.command" placeholder="!task"></label>
+          <label>Кулдаун на зрителя, сек <input type="number" min="0" data-path="twitch.cooldownSec" data-type="int"></label>
+          <label>Максимум в очереди <input type="number" min="1" max="200" data-path="twitch.maxQueue" data-type="int"></label>
+          <div class="roles">Доступ к !task
+            <label class="check"><input type="checkbox" data-role="everyone"> все</label>
+            <label class="check"><input type="checkbox" data-role="subscriber"> подписчики</label>
+            <label class="check"><input type="checkbox" data-role="vip"> VIP</label>
+            <label class="check"><input type="checkbox" data-role="moderator"> модераторы</label>
+          </div>
+          <div class="roles">Доступ к голосованию (!1–!4)
+            <label class="check"><input type="checkbox" data-vote-role="everyone"> все</label>
+            <label class="check"><input type="checkbox" data-vote-role="subscriber"> подписчики</label>
+            <label class="check"><input type="checkbox" data-vote-role="vip"> VIP</label>
+            <label class="check"><input type="checkbox" data-vote-role="moderator"> модераторы</label>
+          </div>
+          <label>Запрещённые слова (по одному в строке) <textarea rows="3" data-path="twitch.bannedWords" data-type="lines"></textarea></label>
+          <details>
+            <summary>Ответы бота в чат (необязательно)</summary>
+            <p class="hint">Без токена чат читается анонимно и бот молчит. С токеном бот отвечает «задание отправлено на модерацию» и т.п.</p>
+            <label>Логин бота <input data-path="twitch.botUsername" autocomplete="off"></label>
+            <label>OAuth-токен бота <input type="password" data-path="twitch.oauthToken" autocomplete="off" placeholder="oauth:..."></label>
+          </details>
+          <details>
+            <summary>Коды команд (JSON)</summary>
+            <p class="hint"><code>"код": {"type": "тип", "params": {фиксированные}, "param": "что задаёт число"}</code></p>
+            <textarea rows="10" class="mono" data-path="twitch.aliases" data-type="json"></textarea>
+          </details>
+        </section>
+        <section class="panel">
+          <h2>Эффект низкого HP</h2>
+          <label class="check"><input type="checkbox" data-path="lowHealth.enabled"> Пульсация и сердцебиение при HP ниже 20</label>
+          <label>Громкость сердцебиения <input type="range" min="0" max="1" step="0.05" data-path="lowHealth.volume" data-type="num"></label>
+          <label>Имя источника CS2 в OBS <input data-path="lowHealth.obsSource" placeholder="Захват игры"></label>
+          <p class="hint">Эффект встроен в /bonuses. Сердцебиение затихает за первые 10 секунд; пульсация остаётся до смерти, восстановления HP или конца раунда. Для чёрно-белой картинки включите подключение OBS ниже и введите точное имя источника захвата игры. Пустое имя — только пульсация и звук.</p>
+          <p class="hint">В источнике /bonuses включите «Управлять аудио через OBS». При аварийном закрытии программы выключите фильтр «CS2Tasks — Low HP» у источника CS2 вручную.</p>
+        </section>
+        <section class="panel">
+          <h2>Подключение к OBS</h2>
+          <label class="check"><input type="checkbox" data-path="obs.enabled"> Подключаться к OBS</label>
+          <label>Порт WebSocket OBS <input type="number" min="1" max="65535" data-path="obs.port" data-type="int"></label>
+          <label>Пароль WebSocket OBS <input type="password" data-path="obs.password" autocomplete="off"></label>
+          <p class="hint">Для эффекта низкого HP включите сервер WebSocket в OBS и укажите здесь его порт и пароль.</p>
+        </section>
+        <section class="panel">
+          <h2>Бонусы за убийства</h2>
+          <label class="check"><input type="checkbox" data-path="bonuses.enabled"> Начислять очки и показывать анимации убийств</label>
+          <label class="check"><input type="checkbox" data-path="bonuses.showTotal"> Показывать счёт за матч</label>
+          <label>Анимация <select data-path="bonuses.animation"><option value="scale">Scale pop — увеличение</option><option value="slide">Slide up — движение вверх</option></select></label>
+          <div class="inline3">
+            <label>Размер текста <input type="number" min="20" max="100" data-path="bonuses.size" data-type="int"></label>
+            <label>X, % экрана <input type="number" min="0" max="100" data-path="bonuses.x" data-type="num"></label>
+            <label>Y, % экрана <input type="number" min="0" max="100" data-path="bonuses.y" data-type="num"></label>
+          </div>
+          <label>Цвет очков <input type="color" data-path="bonuses.color"></label>
+          <details><summary>Начисление очков</summary>
+            <label>База за убийство / группу убийств <input type="number" min="0" max="10000" data-path="bonuses.base" data-type="int"></label>
+            <label>Окно серии, мс <input type="number" min="200" max="30000" data-path="bonuses.comboWindowMs" data-type="int"></label>
+            <label>Прирост множителя базы за следующий кил (0.2 = +20%) <input type="number" min="0" max="2" step="0.1" data-path="bonuses.comboStep" data-type="num"></label>
+            <label>Множитель дополнительных бонусов <input type="number" min="0" max="10" step="0.1" data-path="bonuses.bonusMultiplier" data-type="num"></label>
+            <label>Объединять убийства за, мс <input type="number" min="0" max="1000" data-path="bonuses.mergeMs" data-type="int"></label>
+            <label>Хедшот (HS) <input type="number" min="0" max="10000" data-path="bonuses.points.headshot" data-type="int"></label>
+            <label>В прыжке (AIR) <input type="number" min="0" max="10000" data-path="bonuses.points.air" data-type="int"></label>
+            <label>Нож (KNIFE) <input type="number" min="0" max="10000" data-path="bonuses.points.knife" data-type="int"></label>
+            <label>Находясь в дыму (IN SMOKE) <input type="number" min="0" max="10000" data-path="bonuses.points.smoke" data-type="int"></label>
+            <label>Ослеплённым (BLIND) <input type="number" min="0" max="10000" data-path="bonuses.points.blind" data-type="int"></label>
+            <label>Убийство после 360° <input type="number" min="0" max="10000" data-path="bonuses.points.spin" data-type="int"></label>
+            <label>Ноускоп (NOSCOPE) <input type="number" min="0" max="10000" data-path="bonuses.points.noscope" data-type="int"></label>
+            <label>Осмотр оружия после убийства <input type="number" min="0" max="10000" data-path="bonuses.points.inspect" data-type="int"></label>
+            <label>Граффити после убийства <input type="number" min="0" max="10000" data-path="bonuses.points.graffiti" data-type="int"></label>
+          </details>
+          <details open><summary>Риск и разнообразие</summary>
+            <label class="check"><input type="checkbox" data-path="bonuses.risk.enabled"> Множитель за риск</label>
+            <label>Прирост за рискованное убийство <input type="number" min="0" max="2" step="0.05" data-path="bonuses.risk.step" data-type="num"></label>
+            <label>Максимальный множитель риска <input type="number" min="1" max="10" step="0.25" data-path="bonuses.risk.maxMultiplier" data-type="num"></label>
+            <label>Порог HP для риска (включительно) <input type="number" min="1" max="100" data-path="bonuses.risk.lowHp" data-type="int"></label>
+            <p class="hint">Низкое HP, нож, последний патрон или два условия на одном убийстве (прыжок, 360°, ноускоп, хедшот, ослепление, дым, огонь). Одно повышение за убийство. Множитель действует на базу и боевые бонусы до смерти. В объединённом пакете используется итоговый множитель группы.</p>
+            <label class="check"><input type="checkbox" data-path="bonuses.diversity.enabled"> Бонус за разнообразие оружия</label>
+            <label>Шаг бонуса за новое оружие <input type="number" min="0" max="10000" data-path="bonuses.diversity.step" data-type="int"></label>
+            <label>Максимальный бонус за новое оружие <input type="number" min="0" max="10000" data-path="bonuses.diversity.maxBonus" data-type="int"></label>
+            <p class="hint">За второе новое оружие +50, за третье +100, затем +150 и до +200. Повтор уже использованного оружия не даёт бонус. Список оружия сбрасывается после смерти; разные модели ножей считаются одним оружием. Разнообразие прибавляется после множителя.</p>
+          </details>
+          <details><summary>Параметры анимации</summary>
+            <label>Начальный масштаб <input type="number" min="1" max="3" step="0.1" data-path="bonuses.scaleFrom" data-type="num"></label>
+            <label>Появление, мс <input type="number" min="1" max="10000" data-path="bonuses.fadeInMs" data-type="int"></label>
+            <label>Показ, мс <input type="number" min="0" max="10000" data-path="bonuses.holdMs" data-type="int"></label>
+            <label>Исчезновение, мс <input type="number" min="1" max="10000" data-path="bonuses.fadeOutMs" data-type="int"></label>
+          </details>
+          <p class="hint">Отдельный оверлей «Бонусы» на вкладке «GSI и OBS». Очки сбрасываются в начале нового матча и при перезапуске программы.
+          Прыжок и ноускоп определяются приблизительно по вводу. Прострелы, OVERKILL и трюки на лестнице не начисляются.</p>
+        </section>
+        <section class="panel">
+          <h2>Мышь и клавиатура</h2>
+          <label class="check"><input type="checkbox" data-path="input.enabled"> Задания «360°», «в прыжке», «ноускоп» (слушать мышь, пока CS2 в фокусе)</label>
+          <label>Чувствительность мыши (0 — взять из настроек CS2) <input type="number" min="0" max="100" step="0.001" data-path="input.sensitivity" data-type="num"></label>
+          <label>За сколько мс нужно провернуть 360° (допуск 320–400°) <input type="number" min="200" max="5000" step="50" data-path="input.spinWithinMs" data-type="int"></label>
+          <label>Сколько мс после 360° даётся на убийство <input type="number" min="200" max="5000" step="50" data-path="input.killAfterSpinMs" data-type="int"></label>
+          <label>Убийство «в прыжке», если с прыжка прошло не больше, мс <input type="number" min="200" max="3000" step="50" data-path="input.jumpKillMs" data-type="int"></label>
+          <p class="hint">Изменения применяются после сохранения настроек.</p>
+        </section>
+        <section class="panel">
+          <h2>Прочее</h2>
+          <label>Порт (нужен перезапуск и переустановка cfg) <input type="number" min="1" max="65535" data-path="port" data-type="int"></label>
+          <label>Оверлеи для второго ПК <select id="overlay-lan-address" data-path="overlayLanAddress"><option value="">Выключено</option></select></label>
+          <p class="hint">Выберите адрес Ethernet или Wi-Fi игрового ПК и перезапустите программу. Ссылки для второго ПК появятся во вкладке «GSI и OBS».</p>
+          <label>Папка cfg CS2 (если не нашлась сама) <input data-path="cs2CfgPath" placeholder="C:\...\Counter-Strike Global Offensive\game\csgo\cfg"></label>
+          <label class="check"><input type="checkbox" data-path="debug.recordGsi"> Записывать пакеты GSI в data/gsi-log-*.jsonl</label>
+          <label>Уровень логов <select data-path="debug.logLevel"><option>debug</option><option>info</option><option>warn</option><option>error</option></select></label>
+        </section>
+      </div>
+      <div class="row sticky-save">
+        <button class="btn primary" type="submit">Сохранить настройки</button>
+        <button class="btn ghost" type="button" id="settings-reload">Отменить изменения</button>
+      </div>
+    </form>
+  </main>
+
+  <!-- ===================== GSI и OBS ===================== -->
+  <main class="tab" id="tab-gsi" hidden>
+    <div class="grid">
+      <section class="panel">
+        <h2>Game State Integration</h2>
+        <div id="gsi-info" class="kv"></div>
+        <div class="row">
+          <button class="btn primary" id="gsi-install">Переустановить GSI cfg</button>
+          <button class="btn ghost" id="gsi-token-toggle">Показать токен</button>
+          <button class="btn ghost" id="gsi-dump" title="Сохранить последние ~600 пакетов от игры в папку data для диагностики">Сохранить последние пакеты GSI</button>
+        </div>
+        <p class="hint">После установки cfg <b>перезапустите CS2</b> — игра читает его только при старте.
+          В папку игры программа кладёт только этот один файл.</p>
+      </section>
+      <section class="panel">
+        <h2>Мышь и клавиатура (360°, прыжок, ноускоп)</h2>
+        <div id="input-info" class="kv"></div>
+        <p class="hint">Игра не затрагивается: программа слушает мышь и несколько клавиш из ваших биндов на уровне Windows
+          (как оверлеи нажатых клавиш для стримов) и только пока активное окно — CS2. Ничего не записывает.
+          Чувствительность и бинды читаются из настроек CS2. Проверка: в игре резко крутанитесь на 360° — здесь появится «последний разворот».</p>
+      </section>
+      <section class="panel">
+        <h2>Подключение к OBS</h2>
+        <div id="obs-info" class="kv"></div>
+        <button class="btn" id="obs-connect">Переподключиться</button>
+      </section>
+      <section class="panel" id="overlay-lan-panel" hidden>
+        <h2>Оверлеи для второго ПК</h2>
+        <p id="overlay-lan-error" class="hint" hidden></p>
+        <div id="overlay-lan-links" hidden>
+          <label>Задания <input id="lan-overlay-url" readonly></label>
+          <label>Бонусы и бинго при закупке <input id="lan-bonus-url" readonly></label>
+          <label>Итоги матча <input id="lan-summary-url" readonly></label>
+          <p class="hint">Вставьте нужный URL в источник «Браузер» на втором ПК.</p>
+        </div>
+      </section>
+      <section class="panel">
+        <h2>Оверлей бонусов за убийства</h2>
+        <p class="hint">Итоги завершённого матча уже встроены в этот полноэкранный источник и появляются по центру автоматически.</p>
+        <div class="copy-row"><input id="bonus-url" readonly><button class="btn" id="bonus-copy">Копировать</button><a class="btn ghost" id="bonus-open" target="_blank">Открыть</a></div>
+        <p class="hint">Добавьте в OBS ещё один источник «Браузер» размером <b>1920 × 1080</b> (или размером вашей сцены).
+          Здесь появляются +очки, DOUBLE/TRIPLE KILL и бонусы. Фон прозрачный. Настройки положения и анимации — в «Настройках».</p>
+        <div class="row"><button class="btn primary" id="bonus-test">Тест анимации</button><button class="btn ghost" id="bonus-reset">Сбросить очки бонусов</button></div>
+        <p class="hint">Тест не изменяет очки и настоящую серию убийств. Сброс бонусных очков не затрагивает задания.</p>
+      </section>
+      <section class="panel">
+        <h2>Итоги матча по центру экрана</h2>
+        <div class="copy-row"><input id="summary-url" readonly><button class="btn" id="summary-copy">Копировать</button><a class="btn ghost" id="summary-open" target="_blank">Открыть</a></div>
+        <button class="btn primary" id="summary-test">Тест итогов матча</button>
+        <p class="hint">Если источник /bonuses уже добавлен, отдельный источник не нужен — достаточно обновить его кэш.
+          Иначе добавьте эту ссылку в OBS как «Браузер» 1920×1080. Итоги показываются только после конца всего матча,
+          по умолчанию 20 секунд. Кнопка теста не меняет задания и статистику.</p>
+      </section>
+      <section class="panel">
+        <h2>Оверлей для OBS</h2>
+        <div class="inline3">
+          <label>Масштаб <input type="number" id="ov-scale" min="0.5" max="3" step="0.1" value="1"></label>
+          <label>Сторона <select id="ov-align"><option value="left">слева</option><option value="right">справа</option></select></label>
+          <label>Тема <select id="ov-theme"><option value="default">обычная</option><option value="compact">компактная</option><option value="clean">без подложек</option></select></label>
+        </div>
+        <div class="copy-row"><input id="ov-url" readonly><button class="btn" id="ov-copy">Копировать</button><a class="btn ghost" id="ov-open" target="_blank">Открыть</a></div>
+        <ol class="hint">
+          <li>OBS → Источники → <b>+</b> → «Браузер».</li>
+          <li>URL — ссылка выше, ширина <b>500</b>, высота <b>600</b>.</li>
+          <li>Включите <b>«Управлять аудио через OBS»</b> — тогда звук пропуска пойдёт в стрим и будет в микшере.</li>
+          <li>Фон уже прозрачный — хромакей не нужен.</li>
+          <li>Проверьте кнопкой «Тест оверлея» на вкладке «Матч».</li>
+        </ol>
+      </section>
+    </div>
+  </main>
+
+  <div id="toasts"></div>
+  <script src="/overlay/weapons.js"></script><script src="/overlay/icons.js"></script>
+  <script type="module" src="/panel/panel.js"></script>
+</body>
+</html>

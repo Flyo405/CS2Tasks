@@ -1,0 +1,498 @@
+[
+  {
+    "type": "kills",
+    "weight": 3,
+    "difficulty": "easy",
+    "params": {
+      "count": [
+        5,
+        8
+      ]
+    }
+  },
+  {
+    "type": "headshots",
+    "weight": 3,
+    "difficulty": "easy",
+    "params": {
+      "count": [
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "type": "assists",
+    "weight": 2,
+    "difficulty": "easy",
+    "params": {
+      "count": [
+        2,
+        4
+      ]
+    }
+  },
+  {
+    "type": "survive_rounds",
+    "weight": 2,
+    "difficulty": "easy",
+    "params": {
+      "count": [
+        4,
+        7
+      ]
+    }
+  },
+  {
+    "type": "round_wins",
+    "weight": 2,
+    "difficulty": "easy",
+    "params": {
+      "count": [
+        2,
+        4
+      ]
+    }
+  },
+  {
+    "type": "mvps",
+    "weight": 1,
+    "difficulty": "easy",
+    "params": {
+      "count": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "type": "weapon_kills",
+    "weight": 3,
+    "difficulty": "medium",
+    "params": {
+      "weapon": [
+        "weapon_deagle",
+        "weapon_ssg08",
+        "weapon_mp9",
+        "weapon_nova",
+        "weapon_p250",
+        "weapon_famas",
+        "weapon_galilar",
+        "weapon_ump45",
+        "weapon_mac10"
+      ],
+      "count": [
+        2,
+        4
+      ]
+    }
+  },
+  {
+    "type": "weapon_type_kills",
+    "weight": 2,
+    "difficulty": "medium",
+    "params": {
+      "weaponType": [
+        "Pistol",
+        "Shotgun",
+        "SniperRifle",
+        "Submachine Gun"
+      ],
+      "count": [
+        3,
+        5
+      ]
+    }
+  },
+  {
+    "type": "multikill_rounds",
+    "weight": 2,
+    "difficulty": "medium",
+    "params": {
+      "kills": 3,
+      "count": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "type": "low_hp_kills",
+    "weight": 2,
+    "difficulty": "medium",
+    "params": {
+      "hp": [
+        20,
+        40
+      ],
+      "count": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "type": "eco_kills",
+    "weight": 2,
+    "difficulty": "medium",
+    "params": {
+      "equip": [
+        1500,
+        2500
+      ],
+      "count": [
+        2,
+        4
+      ]
+    }
+  },
+  {
+    "type": "headshots",
+    "weight": 1,
+    "difficulty": "medium",
+    "params": { "count": [4, 7] }
+  },
+  {
+    "type": "headshots",
+    "weight": 1,
+    "difficulty": "hard",
+    "params": {
+      "count": [
+        8,
+        12
+      ]
+    }
+  },
+  {
+    "type": "positive_kd",
+    "weight": 2,
+    "difficulty": "medium",
+    "params": {
+      "kd": [
+        1,
+        1.3
+      ]
+    }
+  },
+  {
+    "type": "ace",
+    "weight": 1,
+    "difficulty": "hard",
+    "params": {}
+  },
+  {
+    "type": "weapon_kills",
+    "weight": 2,
+    "difficulty": "hard",
+    "params": {
+      "weapon": [
+        "weapon_knife",
+        "weapon_taser"
+      ],
+      "count": 1
+    }
+  },
+  {
+    "type": "flashed_kills",
+    "weight": 2,
+    "difficulty": "hard",
+    "params": {
+      "count": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "type": "max_deaths",
+    "weight": 2,
+    "difficulty": "hard",
+    "params": {
+      "deaths": [
+        8,
+        12
+      ]
+    }
+  },
+  {
+    "type": "win_match",
+    "weight": 2,
+    "difficulty": "hard",
+    "params": {}
+  },
+  {
+    "type": "multikill_rounds",
+    "weight": 1,
+    "difficulty": "hard",
+    "params": {
+      "kills": 4,
+      "count": 1
+    }
+  },
+  {
+    "type": "jump_kills",
+    "weight": 2,
+    "difficulty": "medium",
+    "params": {
+      "count": 1
+    }
+  },
+  {
+    "type": "jump_kills",
+    "weight": 1,
+    "difficulty": "hard",
+    "params": {
+      "count": [
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "type": "spin_kills",
+    "weight": 2,
+    "difficulty": "hard",
+    "params": {
+      "count": 1
+    }
+  },
+  {
+    "type": "noscope_kills",
+    "weight": 2,
+    "difficulty": "hard",
+    "params": {
+      "count": 1
+    }
+  },
+  {
+    "type": "kill_streak",
+    "weight": 1,
+    "difficulty": "medium",
+    "params": {
+      "count": [
+        3,
+        5
+      ]
+    }
+  },
+  {
+    "type": "survival_streak",
+    "weight": 1,
+    "difficulty": "medium",
+    "params": {
+      "count": [
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "type": "win_streak",
+    "weight": 1,
+    "difficulty": "medium",
+    "params": {
+      "count": [
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "type": "full_hp_kill_rounds",
+    "weight": 1,
+    "difficulty": "medium",
+    "params": {
+      "count": 1
+    }
+  },
+  {
+    "type": "smoked_kills",
+    "weight": 1,
+    "difficulty": "hard",
+    "params": {
+      "count": 1
+    }
+  },
+  {
+    "type": "burning_kills",
+    "weight": 1,
+    "difficulty": "hard",
+    "params": {
+      "count": 1
+    }
+  },
+  {
+    "type": "different_weapon_round",
+    "weight": 1,
+    "difficulty": "medium",
+    "params": {
+      "count": 2
+    }
+  },
+  {
+    "type": "eco_round_wins",
+    "weight": 1,
+    "difficulty": "easy",
+    "params": {
+      "equip": [
+        1500,
+        2500
+      ],
+      "count": 1
+    }
+  },
+  {
+    "type": "combo_kills",
+    "difficulty": "hard",
+    "weight": 1,
+    "params": {
+      "combo": "jump_noscope",
+      "count": 1
+    }
+  },
+  {
+    "type": "combo_kills",
+    "difficulty": "hard",
+    "weight": 1,
+    "params": {
+      "combo": "spin_noscope",
+      "count": 1
+    }
+  },
+  {
+    "type": "combo_kills",
+    "difficulty": "hard",
+    "weight": 1,
+    "params": {
+      "combo": "spin_jump",
+      "count": 1
+    }
+  },
+  {
+    "type": "combo_kills",
+    "difficulty": "hard",
+    "weight": 1,
+    "params": {
+      "combo": "spin_jump_noscope",
+      "count": 1
+    }
+  },
+  {
+    "type": "combo_kills",
+    "difficulty": "medium",
+    "weight": 1,
+    "params": {
+      "combo": "jump_headshot",
+      "count": 1
+    }
+  },
+  {
+    "type": "combo_kills",
+    "difficulty": "hard",
+    "weight": 1,
+    "params": {
+      "combo": "jump_flashed",
+      "count": 1
+    }
+  },
+  {
+    "type": "combo_kills",
+    "difficulty": "hard",
+    "weight": 1,
+    "params": {
+      "combo": "noscope_headshot",
+      "count": 1
+    }
+  },
+  {
+    "type": "combo_kills",
+    "difficulty": "hard",
+    "weight": 1,
+    "params": {
+      "combo": "noscope_flashed",
+      "count": 1
+    }
+  },
+  {
+    "type": "combo_kills",
+    "difficulty": "hard",
+    "weight": 1,
+    "params": {
+      "combo": "smoke_headshot",
+      "count": 1
+    }
+  },
+  {
+    "type": "combo_kills",
+    "difficulty": "hard",
+    "weight": 1,
+    "params": {
+      "combo": "fire_headshot",
+      "count": 1
+    }
+  },
+  {
+    "type": "combo_kills",
+    "difficulty": "medium",
+    "weight": 1,
+    "params": {
+      "combo": "lowhp_headshot",
+      "count": 1
+    }
+  },
+  {
+    "type": "last_bullet_kills",
+    "weight": 1,
+    "difficulty": "hard",
+    "params": {
+      "count": 1
+    }
+  },
+  {
+    "type": "pistol_round_kills",
+    "weight": 1,
+    "difficulty": "easy",
+    "params": {
+      "count": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "type": "unarmored_kills",
+    "weight": 1,
+    "difficulty": "medium",
+    "params": {
+      "count": 1
+    }
+  },
+
+  {"type": "money_saved", "weight": 1, "difficulty": "easy", "params": {"money": [8000, 10000]}},
+  {"type": "money_saved", "weight": 1, "difficulty": "medium", "params": {"money": 16000}},
+  {"type": "full_buy_streak", "weight": 1, "difficulty": "medium", "params": {"equip": 4500, "count": 3}},
+  {"type": "force_buy_wins", "weight": 2, "difficulty": "medium", "params": {"min": 2000, "max": 3800, "count": 1}},
+  {"type": "last_seconds_wins", "weight": 2, "difficulty": "hard", "params": {"seconds": 20, "count": 1}},
+  {"type": "no_jump_wins", "weight": 1, "difficulty": "medium", "params": {"count": 1}},
+  {"type": "pistol_only_wins", "weight": 2, "difficulty": "hard", "params": {"count": 1}},
+  {"type": "no_reload_wins", "weight": 2, "difficulty": "medium", "params": {"count": 1}},
+  {"type": "early_round_kills", "weight": 2, "difficulty": "medium", "params": {}},
+  {"type": "save_primary", "weight": 1, "difficulty": "medium", "params": {"weapon": "any"}},
+  {"type": "save_primary", "weight": 1, "difficulty": "hard", "params": {"weapon": "weapon_awp"}},
+  {"type": "defuse_survive", "weight": 1, "difficulty": "hard", "params": {}},
+  {"type": "post_plant_kills", "weight": 1, "difficulty": "medium", "params": {}},
+  {"type": "retake_kills", "weight": 1, "difficulty": "medium", "params": {}},
+  {"type": "flick_kills", "weight": 1, "difficulty": "hard", "params": {}},
+  {"type": "crouch_kills", "weight": 1, "difficulty": "medium", "params": {}},
+  {"type": "stationary_kills", "weight": 1, "difficulty": "medium", "params": {}},
+  {"type": "one_tap_kills", "weight": 1, "difficulty": "hard", "params": {}},
+  {"type": "enemy_weapon_kills", "weight": 1, "difficulty": "medium", "params": {}},
+  {"type": "match_arsenal", "weight": 1, "difficulty": "hard", "params": {}},
+  {"type": "team_timeout", "weight": 1, "difficulty": "medium", "params": {}},
+  {"type": "forward_only_round", "weight": 1, "difficulty": "hard", "params": {}},
+  {"type": "walk_only_round", "weight": 1, "difficulty": "medium", "params": {}},
+  {"type": "team_drops", "weight": 1, "difficulty": "medium", "params": {}},
+  {"type": "held_angle_kills", "weight": 1, "difficulty": "medium", "params": {}},
+  {"type": "kills", "weight": 2, "difficulty": "medium", "params": {"count": [9, 16]}},
+  {"type": "round_wins", "weight": 2, "difficulty": "medium", "params": {"count": [5, 9]}}
+]

@@ -1,0 +1,13 @@
+.task-vote {
+  padding: .65em .8em;
+  color: #e9eef4;
+  background: #18212a;
+  border: 1px solid #48535e;
+  border-top: 2px solid #e5b34d;
+}
+.task-vote header, .task-vote-option { display: flex; gap: .6em; align-items: baseline; }
+.task-vote header { justify-content: space-between; padding-bottom: .35em; }
+.task-vote time, .task-vote-option b { color: #e5b34d; font-variant-numeric: tabular-nums; }
+.task-vote-option { font-size: .86em; padding: .25em 0; border-top: 1px solid #ffffff18; }
+.task-vote-option span { flex: 1; }
+#queue-panel .task-vote { margin-bottom: .75em; }

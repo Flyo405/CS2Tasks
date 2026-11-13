@@ -1,0 +1,83 @@
+.bingo-heading { display: flex; align-items: center; justify-content: space-between; gap: 1em; margin-bottom: .6em; }
+.bingo-heading strong { color: #e5b34d; text-transform: uppercase; letter-spacing: .12em; }
+.bingo-heading span { color: #adb8c3; font-size: .85em; }
+.bingo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35em; }
+.bingo-cell { background: #141c25; border: 1px solid #3a4856; border-left: 3px solid #c3913a; padding: .55em; }
+.bingo-cell[data-difficulty="hard"] { border-left-color: #d96872; }
+.bingo-cell.bingo-focus { background: #30291e; }
+.bingo-cell[data-status="completed"] { color: #6de5ae; background: #163229; border-color: #398462; }
+.bingo-cell[data-status="failed"] { color: #98a1ac; border-color: #46515e; }
+.bingo-number { color: inherit; font-variant-numeric: tabular-nums; }
+.bingo-task { display: flex; flex-direction: column; gap: .2em; overflow-wrap: anywhere; }
+.bingo-task small { color: #adb8c3; }
+#tab-match .bingo-cell { min-height: 5em; }
+.bingo-cell { position: relative; }
+.bingo-mark { position: absolute; top: .35em; right: .45em; font-weight: 700; }
+.bingo-tally { display: flex; align-items: baseline; gap: .4em; font-variant-numeric: tabular-nums; }
+.bingo-heading .bingo-tally strong { letter-spacing: normal; }
+.cs-overlay #bingo-board {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  background: linear-gradient(115deg, #26313b, #10161eee);
+  border: 1px solid #465462;
+  border-top: 2px solid #b18a4c;
+  padding: .65em .75em;
+}
+.cs-overlay .bingo-grid { flex: 0 0 7em; gap: .2em; }
+.cs-overlay .bingo-cell { display: grid; place-items: center; aspect-ratio: 1; padding: 0; border-left-width: 2px; }
+.cs-overlay .bingo-cell.bingo-focus { box-shadow: inset 0 0 0 1px #e5b34d70; }
+.cs-overlay .bingo-number { position: absolute; left: .25em; top: .12em; color: #c4cdd7; font-size: .52em; }
+.cs-overlay .bingo-mark { position: static; font-size: 1.1em; }
+.cs-overlay .bingo-icon { width: 64%; height: 60%; color: #bfc9d3; }
+.cs-overlay .bingo-focus .bingo-icon { color: #f0c675; }
+.cs-overlay .bingo-icon svg { width: 100%; height: 100%; }
+.cs-overlay .bingo-heading { margin-bottom: .3em; }
+.cs-overlay .bingo-tally strong { color: #f7e5c1; font-size: 1.6em; line-height: 1.1; }
+.cs-overlay .bingo-tally span, .bingo-completed { color: #aab9c7; font-size: .72em; }
+
+[data-size="5"] > .bingo-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.cs-overlay #bingo-board[data-size="5"] .bingo-grid { flex-basis: 9em; }
+@media (max-width: 680px) {
+  #tab-match #bingo-board[data-size="5"] .bingo-grid { grid-template-columns: repeat(5, minmax(7em, 1fr)); overflow-x: auto; }
+}
+
+#buy-bingo {
+  position: fixed;
+  z-index: 40;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(76vw, 1080px);
+  box-sizing: border-box;
+  padding: clamp(12px, 2vw, 30px);
+  pointer-events: none;
+  background: linear-gradient(135deg, #26313bfa, #111821fa);
+  color: #edf1f6;
+  border: 1px solid #647383;
+  border-top: 3px solid #e5b34d;
+  box-shadow: 0 18px 65px #0009;
+  font-size: clamp(12px, 2.1vh, 24px);
+}
+#buy-bingo[data-size="5"] { width: min(88vw, 1500px); font-size: clamp(11px, 1.7vh, 20px); }
+#buy-bingo .bingo-heading { font-size: 1.4em; }
+#buy-bingo .bingo-cell { min-height: 3.6em; }
+#buy-bingo .bingo-number { display: block; margin-bottom: .22em; color: #aab9c7; font-size: .78em; }
+#buy-bingo .bingo-focus .bingo-number { color: #e5b34d; }
+#buy-bingo .hint { color: #adb8c3; font-size: .78em; margin: .8em 0 0; }
+#buy-bingo { overflow: hidden; }
+#buy-bingo.bingo-entering::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(108deg, transparent 35%, #f4c46c28 48%, #f4c46c50 50%, transparent 62%);
+  animation: bingo-buy-sweep 520ms cubic-bezier(.2, .65, .3, 1) both;
+}
+@keyframes bingo-buy-sweep {
+  from { transform: translateX(-95%); }
+  to { transform: translateX(95%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #buy-bingo.bingo-entering::after { animation: none; opacity: 0; }
+}
