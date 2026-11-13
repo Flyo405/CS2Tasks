@@ -42,4 +42,3 @@ npm start
 
 Run `npm run build:exe` to build `dist/CS2Tasks.exe`. The update checker uses the repository in `package.json` by default. For a local build of a fork, set `$env:CS2TASKS_UPDATE_REPO = 'owner/repository'` before building. GitHub Actions uses the repository where the workflow runs.
 
-[Detailed guide (Russian)](docs/guide-ru.md) · [Release instructions (Russian)](docs/releasing.md) · [Sound credits](sounds/CREDITS.md) · [Game icon credits](public/overlay/weapon-icons-CREDITS.md)

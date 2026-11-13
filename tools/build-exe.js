@@ -55,6 +55,7 @@ const assetKeys = [
   'src/tasks/defaultTemplates.json',
   'gsi/gamestate_integration_cs2tasks.cfg',
   'README.md',
+  'THIRD-PARTY-NOTICES.md',
 ];
 const manifestPath = path.join(BUILD, 'manifest.json');
 fs.writeFileSync(manifestPath, JSON.stringify(assetKeys, null, 2));
