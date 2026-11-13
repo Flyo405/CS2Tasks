@@ -1,0 +1,43 @@
+name: Windows release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    env:
+      CS2TASKS_UPDATE_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Build executable and checksum
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          if ($version -notmatch '^\d+\.\d+\.\d+$' -or $env:GITHUB_REF_NAME -ne "v$version") {
+            throw 'The tag must match the stable version in package.json.'
+          }
+          npm run build:exe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          (Get-FileHash -LiteralPath dist/CS2Tasks.exe -Algorithm SHA256).Hash.ToLowerInvariant() + "  CS2Tasks.exe" |
+            Set-Content -LiteralPath dist/CS2Tasks.exe.sha256 -Encoding ascii
+      - name: Create release draft
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $notes = ".github/release-notes/$tag.md"
+          $notesArgs = if (Test-Path -LiteralPath $notes) { @('--notes-file', $notes) } else { @('--generate-notes') }
+          gh release create $tag dist/CS2Tasks.exe dist/CS2Tasks.exe.sha256 --verify-tag --draft --title $tag.Substring(1) @notesArgs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

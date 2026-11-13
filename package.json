@@ -1,0 +1,33 @@
+{
+  "name": "cs2-tasks",
+  "version": "1.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Flyo405/CS2Tasks.git"
+  },
+  "type": "module",
+  "description": "Задания на матч CS2 через Game State Integration с оверлеем для OBS",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "vitest run",
+    "simulate": "node tools/simulate.js --synthetic",
+    "sounds": "node tools/makeSounds.js",
+    "build:exe": "node tools/build-exe.js",
+    "build:input": "node tools/build-input.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "tmi.js": "^1.8.5",
+    "ws": "^8.22.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "postject": "^1.0.0-alpha.6",
+    "vitest": "^5.1.0"
+  }
+}
