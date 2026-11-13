@@ -18,7 +18,7 @@ export async function resolveHelperPath(dataDir, log) {
   if (IS_SEA) {
     const buf = readAsset(HELPER_ASSET);
     if (!buf) return null;
-    const target = path.join(dataDir, 'bin', 'cs2tasks-input-v3.exe');
+    const target = path.join(dataDir, 'bin', 'cs2tasks-input-v4.exe');
     let same = false;
     try {
       const cur = fs.readFileSync(target);
