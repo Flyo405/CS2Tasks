@@ -179,9 +179,16 @@ async function main() {
   if (IS_SEA && process.platform === 'win32') {
     const helper = await resolveHelperPath(dataDir, log);
     if (helper) {
-      tray = spawn(helper, ['--tray', config.language], { windowsHide: true, stdio: ['pipe', 'pipe', 'ignore'] });
+      let trayLanguage = core.config.language;
+      tray = spawn(helper, ['--tray', trayLanguage], { windowsHide: true, stdio: ['pipe', 'pipe', 'ignore'] });
       tray.on('error', (error) => log.error('Tray:', error.message));
       tray.stdin.on('error', () => {});
+      const unsubscribe = core.subscribe((message) => {
+        if (message.type !== 'state' || !tray.stdin.writable || trayLanguage === core.config.language) return;
+        trayLanguage = core.config.language;
+        tray.stdin.write(`LANGUAGE ${trayLanguage}\n`);
+      });
+      tray.once('close', unsubscribe);
       createInterface({ input: tray.stdout }).on('line', (command) => {
         if (command === 'PANEL') openInBrowser(`${base}/panel`);
         if (command === 'OVERLAY') openInBrowser(`${base}/overlay`);

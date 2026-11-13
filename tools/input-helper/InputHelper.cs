@@ -303,12 +303,21 @@ static class InputHelper
         using (System.Drawing.Icon trayIcon = new System.Drawing.Icon(iconData, SystemInformation.SmallIconSize))
         {
             IntPtr handle = dispatch.Handle;
-            menu.Items.Add(english ? "Open dashboard" : "Открыть панель", null, delegate { Emit("PANEL"); });
-            menu.Items.Add(english ? "Open overlay" : "Открыть оверлей", null, delegate { Emit("OVERLAY"); });
-            ToolStripItem update = menu.Items.Add(english ? "Open release on GitHub" : "Открыть релиз на GitHub", null, delegate { Emit("UPDATE"); });
+            ToolStripItem panel = menu.Items.Add("", null, delegate { Emit("PANEL"); });
+            ToolStripItem overlay = menu.Items.Add("", null, delegate { Emit("OVERLAY"); });
+            ToolStripItem update = menu.Items.Add("", null, delegate { Emit("UPDATE"); });
             update.Visible = false;
             menu.Items.Add(new ToolStripSeparator());
-            menu.Items.Add(english ? "Exit" : "Выйти", null, delegate { Emit("EXIT"); });
+            ToolStripItem exit = menu.Items.Add("", null, delegate { Emit("EXIT"); });
+            Action<bool> setLanguage = delegate(bool useEnglish)
+            {
+                english = useEnglish;
+                panel.Text = english ? "Open dashboard" : "Открыть панель";
+                overlay.Text = english ? "Open overlay" : "Открыть оверлей";
+                update.Text = english ? "Open release on GitHub" : "Открыть релиз на GitHub";
+                exit.Text = english ? "Exit" : "Выйти";
+            };
+            setLanguage(english);
             icon.Icon = trayIcon;
             icon.Text = "CS2 Tasks";
             icon.ContextMenuStrip = menu;
@@ -322,6 +331,12 @@ static class InputHelper
                     string line;
                     while ((line = Console.In.ReadLine()) != null)
                     {
+                        if (line == "LANGUAGE en" || line == "LANGUAGE ru")
+                        {
+                            bool useEnglish = line == "LANGUAGE en";
+                            dispatch.BeginInvoke(new MethodInvoker(delegate { setLanguage(useEnglish); }));
+                            continue;
+                        }
                         if (!line.StartsWith("UPDATE ")) continue;
                         string version = line.Substring(7);
                         dispatch.BeginInvoke(new MethodInvoker(delegate
