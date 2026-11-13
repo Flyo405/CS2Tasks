@@ -116,6 +116,11 @@ try {
   }
   throw e;
 }
+execFileSync('powershell.exe', [
+  '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join(ROOT, 'tools', 'set-exe-icon.ps1'),
+  '-Executable', EXE, '-Icon', path.join(ROOT, 'public', 'shared', 'cs2tasks.ico'),
+], { stdio: 'inherit', windowsHide: true });
+
 await inject(EXE, 'NODE_SEA_BLOB', fs.readFileSync(blob), {
   sentinelFuse: 'NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2',
 });
