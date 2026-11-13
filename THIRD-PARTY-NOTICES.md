@@ -2,14 +2,13 @@
 
 ## Audio
 
-| Файл | Что это | Автор / лицензия | Источник |
+| File | Use | Provided by | Original filename |
 |---|---|---|---|
-| `complete.mp3` | звук выполненного задания (по умолчанию) | файл стримера | `steam-achievement.mp3` |
-| `skip.mp3` | звук пропущенного задания (по умолчанию) | файл стримера | `lego-breaking.mp3` |
+| `complete.mp3` | Default challenge completion sound | Streamer | `steam-achievement.mp3` |
+| `skip.mp3` | Default sound for skipped challenges | Streamer | `lego-breaking.mp3` |
 
 
-Свой звук: положите файл (mp3 / wav / ogg) в эту папку и укажите его имя в настройках
-(«Звук пропуска» / «Звук выполнения») или в `data/config.json` → `sounds.skip` / `sounds.complete`.
+To use a custom sound, put the MP3, WAV, or OGG file in the `sounds/` folder. Enter its filename under **Skip sound** or **Completion sound** in Settings, or set `sounds.skip` or `sounds.complete` in `data/config.json`.
 
 `heartbeat.wav`: original synthesized double heartbeat, ten seconds with a baked-in fade; generated for this project, no external recording.
 
