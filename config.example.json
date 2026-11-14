@@ -145,9 +145,6 @@
         "type": "flashed_kills",
         "param": "count"
       },
-      "win": {
-        "type": "win_match"
-      },
       "360": {
         "type": "spin_kills",
         "param": "count"

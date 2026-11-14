@@ -187,6 +187,7 @@ export const en = {
   'Помощь команде': 'Team support', 'Два убийства за раунд': 'Two kills this round', 'Убийство и 100 HP': 'Kill and 100 HP',
   'Разное оружие за раунд': 'Different weapons this round', 'Выжить в этом раунде': 'Survive this round', 'На этот раунд': 'This round',
   'Задания на урон удалены': 'Retired damage challenge',
+  'Задание удалено из набора': 'This challenge has been retired',
   'Заданий на раунд': 'Round challenges', 'Ссылка скопирована': 'Link copied', 'Настройки сохранены': 'Settings saved',
   'Шаблоны сохранены': 'Templates saved', 'Задание добавлено': 'Challenge added', 'Добавлено в резерв': 'Challenge queued',
   'Своё задание добавлено': 'Custom challenge added', 'Задания перегенерированы': 'Challenges rerolled',

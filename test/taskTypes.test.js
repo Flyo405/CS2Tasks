@@ -99,25 +99,9 @@ describe('задания с проверкой в конце матча (чер�
     return { tm, match, emitted };
   }
 
-  it('max_deaths: прогресс = смерти, превышение → сразу failed', () => {
-    const ctx = { match: { stats: { kills: 0, deaths: 3 } } };
-    const { tm, emitted } = setup(ctx);
-    const t = tm.add({ type: 'max_deaths', params: { deaths: 4 } });
-    expect(t.progress).toBe(3);
-    expect(t.display).toBe('3/4 смерти');
-    ctx.match.stats.deaths = 5;
-    tm.handleEvents([{ type: 'death', count: 2, matchId: 'm1' }], ctx);
-    expect(t.status).toBe('failed');
-    expect(emitted.at(-1)).toMatchObject({ event: 'task_failed', sound: null });
-  });
-
-  it('max_deaths: в лимите → completed на match_end', () => {
-    const ctx = { match: { stats: { kills: 0, deaths: 4 } } };
-    const { tm, match } = setup(ctx);
-    const t = tm.add({ type: 'max_deaths', params: { deaths: 4 } });
-    match.status = 'ended';
-    tm.handleEvents([{ type: 'match_end', matchId: 'm1', result: 'loss' }], ctx);
-    expect(t.status).toBe('completed');
+  it.each(['win_match', 'max_deaths'])('retired challenge %s cannot be added', (type) => {
+    const { tm } = setup({});
+    expect(() => tm.add({ type })).toThrow();
   });
 
   it('positive_kd проверяет только полные раунды после активации', () => {
@@ -139,15 +123,12 @@ describe('задания с проверкой в конце матча (чер�
     expect(ok.display).toBe('K/D 1.33 / 1.20 · 3/3');
   });
 
-  it('win_match и незавершённые счётчики на match_end', () => {
+  it('незавершённые счётчики на match_end', () => {
     const ctx = { match: { stats: { kills: 0, deaths: 0 }, myScore: 13, enemyScore: 7 } };
     const { tm, match } = setup(ctx);
-    const win = tm.add({ type: 'win_match', params: {} });
     const kills = tm.add({ type: 'kills', params: { count: 30 } });
-    expect(win.display).toBe('13 : 7');
     match.status = 'ended';
     tm.handleEvents([{ type: 'match_end', matchId: 'm1', result: 'win' }], ctx);
-    expect(win.status).toBe('completed');
     expect(kills.status).toBe('failed');
   });
 

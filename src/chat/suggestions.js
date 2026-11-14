@@ -1,12 +1,12 @@
 // Очередь предложений зрителей: кулдауны, лимиты, одно ожидающее на пользователя.
 import { randomUUID } from 'node:crypto';
-import { normalizeParams, titleFor, getType } from '../tasks/taskTypes.js';
+import { normalizeParams, titleFor, getType, RETIRED_TYPES } from '../tasks/taskTypes.js';
 
 export class Suggestions {
   constructor({ getConfig, initial = [], now = () => Date.now() }) {
     this.getConfig = getConfig;
     this.now = now;
-    this.queue = Array.isArray(initial) ? initial : [];
+    this.queue = Array.isArray(initial) ? initial.filter((item) => !RETIRED_TYPES.includes(item.type)) : [];
     this.lastAt = new Map();
   }
 

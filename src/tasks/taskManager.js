@@ -1,5 +1,5 @@
 // Жизненный цикл заданий: active / reserve / completed / skipped / failed.
-import { getType, normalizeParams, buildTask, TaskError } from './taskTypes.js';
+import { getType, normalizeParams, buildTask, TaskError, RETIRED_TYPES } from './taskTypes.js';
 import { generate } from './generator.js';
 import { situationCandidates } from './situational.js';
 import { log as defaultLog } from '../log.js';
@@ -19,7 +19,9 @@ export class TaskManager {
    */
   constructor({ getConfig, getTemplates, checkType = () => null, getMatch, getCtx, emit = () => {}, onChange = () => {}, onFinished = () => {}, initial = {}, rng = Math.random, now = () => Date.now(), log = defaultLog }) {
     Object.assign(this, { getConfig, getTemplates, checkType, getMatch, getCtx, emit, onChange, onFinished, rng, now, log });
-    this.tasks = Array.isArray(initial.tasks) ? initial.tasks : [];
+    this.tasks = Array.isArray(initial.tasks)
+      ? initial.tasks.filter((task) => task.status !== 'reserve' || !RETIRED_TYPES.includes(task.type))
+      : [];
     this.history = Array.isArray(initial.history) ? initial.history : [];
     for (const task of this.tasks) {
       if (task.status !== 'active' && task.status !== 'reserve') continue;

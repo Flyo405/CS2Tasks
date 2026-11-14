@@ -16,7 +16,8 @@ import { randomUUID } from 'node:crypto';
 import { WEAPONS, WEAPON_TYPES, weaponName, weaponWith, weaponMatches, weaponTypeMatches, canonicalWeapon } from './weapons.js';
 
 export class TaskError extends Error {}
-export const RETIRED_TYPES = ['damage_total', 'damage_rounds'];
+export const MATCH_END_TYPES = ['win_match', 'max_deaths'];
+export const RETIRED_TYPES = ['damage_total', 'damage_rounds', ...MATCH_END_TYPES];
 
 export const DIFFICULTIES = ['easy', 'medium', 'hard'];
 
@@ -471,36 +472,6 @@ export const TASK_TYPES = {
     target: (p) => p.count,
     onEvent: (t, e) => (e.type === 'kill' && e.noscope ? t.progress + e.count : undefined),
   },
-  win_match: {
-    name: 'Победа в матче',
-    icon: '🏆',
-    mode: 'end',
-    bar: 'none',
-    params: {},
-    title: () => 'Выиграть матч',
-    target: () => 1,
-    live: (t, ctx) => {
-      const m = ctx.match;
-      if (!m || m.myScore == null) return { progress: 0, display: null };
-      return { progress: 0, display: `${m.myScore} : ${m.enemyScore}` };
-    },
-    onMatchEnd: (t, ctx, ev) => (ev?.result === 'win' ? 'completed' : 'failed'),
-  },
-  max_deaths: {
-    name: 'Лимит смертей',
-    icon: '☠️',
-    mode: 'end',
-    bar: 'danger',
-    params: { deaths: P.int('Максимум смертей', 0, 30, 12) },
-    title: (p) => `Умереть не больше ${p.deaths} ${plural(p.deaths, 'раза', 'раз', 'раз')}`,
-    target: (p) => p.deaths,
-    live: (t, ctx) => {
-      const d = ctx.match?.stats?.deaths ?? 0;
-      return { progress: d, display: `${d}/${t.params.deaths} ${plural(t.params.deaths, 'смерть', 'смерти', 'смертей')}` };
-    },
-    failNow: (t) => t.progress > t.params.deaths,
-    onMatchEnd: (t) => (t.progress <= t.params.deaths ? 'completed' : 'failed'),
-  },
   positive_kd: {
     name: 'K/D за несколько раундов',
     icon: '📈',
@@ -531,7 +502,7 @@ export const TASK_TYPES = {
 };
 
 export function getType(id) {
-  return Object.prototype.hasOwnProperty.call(TASK_TYPES, id) ? TASK_TYPES[id] : null;
+  return !RETIRED_TYPES.includes(id) && Object.prototype.hasOwnProperty.call(TASK_TYPES, id) ? TASK_TYPES[id] : null;
 }
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
@@ -616,7 +587,7 @@ export function buildTask(typeId, params, extra = {}) {
 
 /** Описание типов для панели (без функций). */
 export function describeTypes() {
-  return Object.entries(TASK_TYPES).map(([id, t]) => ({
+  return Object.entries(TASK_TYPES).filter(([id]) => !RETIRED_TYPES.includes(id)).map(([id, t]) => ({
     id,
     name: t.name,
     icon: t.icon,

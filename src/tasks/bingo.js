@@ -1,7 +1,7 @@
 import { ASSET, readAssetText } from '../paths.js';
 import { generate, instantiateParams, randInt } from './generator.js';
 import { TaskManager } from './taskManager.js';
-import { getType, normalizeParams } from './taskTypes.js';
+import { buildTask, getType, MATCH_END_TYPES, normalizeParams } from './taskTypes.js';
 import { validateTemplates } from './templates.js';
 
 function boardLines(size) {
@@ -25,7 +25,13 @@ export class Bingo {
     this.manager = new TaskManager({
       getConfig: () => ({ ...getConfig(), tasks: { count: 0, maxActive: this.size ** 2 } }),
       getTemplates: () => [], getMatch, getCtx, onFinished, now, rng, log,
-      initial: { tasks: initial?.cells },
+      initial: { tasks: initial?.cells?.map((task) => {
+        if (task.status !== 'active' || !MATCH_END_TYPES.includes(task.type)) return task;
+        const type = task.type === 'win_match' ? 'round_wins' : 'survive_rounds';
+        return buildTask(type, { count: 3 }, {
+          id: task.id, source: task.source, matchId: task.matchId, difficulty: task.difficulty,
+        });
+      }) },
     });
   }
 

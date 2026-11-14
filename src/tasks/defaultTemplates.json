@@ -204,23 +204,6 @@
     }
   },
   {
-    "type": "max_deaths",
-    "weight": 2,
-    "difficulty": "hard",
-    "params": {
-      "deaths": [
-        8,
-        12
-      ]
-    }
-  },
-  {
-    "type": "win_match",
-    "weight": 2,
-    "difficulty": "hard",
-    "params": {}
-  },
-  {
     "type": "multikill_rounds",
     "weight": 1,
     "difficulty": "hard",

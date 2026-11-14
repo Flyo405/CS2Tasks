@@ -145,7 +145,7 @@ export class Core {
       onChange: () => this.changed(),
       log,
     });
-    this.tasks.replaceTypes(RETIRED_TYPES, 'retired', 'Задания на урон удалены');
+    this.tasks.replaceTypes(RETIRED_TYPES, 'retired', 'Задание удалено из набора');
   }
 
   serialize() {

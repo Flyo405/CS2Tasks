@@ -49,8 +49,6 @@ describe('синтетический матч целиком', () => {
           t.lowhp = big('low_hp_kills', { hp: 30, count: 20 });
           t.flash = big('flashed_kills', { count: 20 });
           t.eco = big('eco_kills', { equip: 2000, count: 30 });
-          t.win = big('win_match', {});
-          t.deathsOk = big('max_deaths', { deaths: 30 });
         },
       });
 
@@ -75,8 +73,6 @@ describe('синтетический матч целиком', () => {
       expect(p(t.lowhp).progress).toBe(Math.min(20, e.lowHpKills30));
       expect(p(t.flash).progress).toBe(Math.min(20, e.flashedKills));
       expect(p(t.eco).progress).toBe(Math.min(30, e.ecoKills2000));
-      expect(p(t.win).status).toBe(e.result === 'win' ? 'completed' : 'failed');
-      expect(p(t.deathsOk).status).toBe(e.deaths <= 30 ? 'completed' : 'failed');
       expect(core.tasks.active()).toHaveLength(0);
     });
   }
