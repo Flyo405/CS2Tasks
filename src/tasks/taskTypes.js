@@ -17,7 +17,7 @@ import { WEAPONS, WEAPON_TYPES, weaponName, weaponWith, weaponMatches, weaponTyp
 
 export class TaskError extends Error {}
 export const MATCH_END_TYPES = ['win_match', 'max_deaths'];
-export const RETIRED_TYPES = ['damage_total', 'damage_rounds', ...MATCH_END_TYPES];
+export const RETIRED_TYPES = ['damage_total', 'damage_rounds', 'teamkill', ...MATCH_END_TYPES];
 
 export const DIFFICULTIES = ['easy', 'medium', 'hard'];
 

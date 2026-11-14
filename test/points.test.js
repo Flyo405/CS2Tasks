@@ -45,7 +45,7 @@ describe('PointsGame', () => {
 
 describe('режим «Очки» в программе', () => {
   it('выполненные задания дают очки по сложности, доп. задание — мало, пропуск отнимает половину цены', async () => {
-    const core = setup('points', { points: { goal: 400 } });
+    const core = setup('points', { points: { goal: 500 } });
     core.ingest(raw());
     expect(core.pointsActive).toBe(true);
     const events = [];
@@ -57,17 +57,17 @@ describe('режим «Очки» в программе', () => {
     core.ingest(raw({ kills: 1, roundKills: 1, roundHs: 1 }));
     expect(core.tasks.get(hard.id).status).toBe('completed');
     expect(core.tasks.get(extra.id).status).toBe('completed');
-    expect(core.points.score).toBe(-50 + 350 + 25);
-    expect(events.map((e) => e.points).sort((a, b) => a - b)).toEqual([-50, 25, 350]);
+    expect(core.points.score).toBe(-50 + 500 + 25);
+    expect(events.map((e) => e.points).sort((a, b) => a - b)).toEqual([-50, 25, 500]);
     expect(core.points.reachedAt).toBeNull();
     const medium = put(core, 'mvps', { count: 1 }, { difficulty: 'medium' });
     core.tasks.complete(medium.id);
-    expect(core.points.score).toBe(525);
+    expect(core.points.score).toBe(725);
     expect(core.points.reachedAt).not.toBeNull();
-    expect(events.at(-1)).toMatchObject({ reached: true, score: 525, goal: 400 });
+    expect(events.at(-1)).toMatchObject({ reached: true, score: 725, goal: 500 });
     const st = core.getState();
-    expect(st.points).toMatchObject({ score: 525, goal: 400, skipPenalty: 50, values: { easy: 100, medium: 200, hard: 350, extra: 25 } });
-    expect(st.tasks.find((t) => t.id === hard.id)).toMatchObject({ points: 350, penalty: 175 });
+    expect(st.points).toMatchObject({ score: 725, goal: 500, skipPenalty: 50, values: { easy: 100, medium: 250, hard: 500, extra: 25 } });
+    expect(st.tasks.find((t) => t.id === hard.id)).toMatchObject({ points: 500, penalty: 250 });
     await core.shutdown();
   });
 
@@ -115,10 +115,10 @@ describe('режим «Очки» в программе', () => {
     core2.points = new PointsGame({ initial: saved.points, getConfig: () => core2.config });
     core2.reports.current = saved.reportCurrent;
     expect(core2.pointsActive).toBe(true);
-    expect(core2.points.score).toBe(350);
+    expect(core2.points.score).toBe(500);
     core2.ingest(raw({ phase: 'gameover', ct: 13, t: 3, roundPhase: 'over' }));
     const report = core2.reports.history[0];
-    expect(report.points).toEqual({ score: 350, goal: 300, reached: true });
+    expect(report.points).toEqual({ score: 500, goal: 300, reached: true });
     await core2.shutdown();
   });
 
@@ -127,23 +127,23 @@ describe('режим «Очки» в программе', () => {
     core.ingest(raw());
     const skip = (difficulty, extra = {}) => core.tasks.skip(put(core, 'kills', { count: 5 }, { difficulty, ...extra }).id);
     skip('hard');
-    expect(core.points.score).toBe(-175);
+    expect(core.points.score).toBe(-250);
     skip('easy', { situational: true, situationalRound: 0 }); // доп. задание: 25 × 50% = 12.5 → 13
-    expect(core.points.score).toBe(-188);
+    expect(core.points.score).toBe(-263);
     const done = put(core, 'kills', { count: 5 }, { difficulty: 'hard' });
     core.tasks.complete(done.id);
     const done2 = put(core, 'kills', { count: 5 }, { difficulty: 'hard' });
     core.tasks.complete(done2.id);
-    expect(core.points.score).toBe(512);
+    expect(core.points.score).toBe(737);
     expect(core.points.reachedAt).not.toBeNull();
     skip('hard');
     skip('hard');
-    expect(core.points.score).toBe(162); // ниже цели, но «цель достигнута» не отбирается
+    expect(core.points.score).toBe(237); // ниже цели, но «цель достигнута» не отбирается
     expect(core.getState().points.reachedAt).not.toBeNull();
     // «Удалить» — без штрафа, тестовые задания — без штрафа
     core.tasks.remove(put(core, 'kills', { count: 5 }, { difficulty: 'hard' }).id);
     core.tasks.skip(put(core, 'kills', { count: 5 }, { difficulty: 'hard', test: true }).id);
-    expect(core.points.score).toBe(162);
+    expect(core.points.score).toBe(237);
     await core.shutdown();
   });
 

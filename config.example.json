@@ -22,8 +22,9 @@
     "points": {
       "goal": 1500,
       "easy": 100,
-      "medium": 200,
-      "hard": 350,
+      "medium": 250,
+      "hard": 500,
+      "rewardVersion": 1,
       "extra": 25,
       "skipPenalty": 50
     }

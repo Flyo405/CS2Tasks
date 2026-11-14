@@ -135,6 +135,11 @@ export function loadConfig(dataDir) {
   const raw = readJson(file, null);
   const created = raw === null;
   const config = deepMerge(structuredClone(DEFAULT_CONFIG), raw || {});
+  const oldRewards = raw?.tasks?.points;
+  if (oldRewards && oldRewards.rewardVersion == null) {
+    if (oldRewards.medium === 200) config.tasks.points.medium = 250;
+    if (oldRewards.hard === 350) config.tasks.points.hard = 500;
+  }
   if (!config.gsiToken) config.gsiToken = crypto.randomBytes(16).toString('hex');
   const errors = validateConfig(config);
   if (errors.length) {
