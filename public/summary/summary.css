@@ -8,6 +8,12 @@ html, body { margin: 0; background: transparent !important; }
 .summary-score { font-size: 64px; line-height: 1.2; font-weight: 800; font-variant-numeric: tabular-nums; margin: 10px 0 20px; letter-spacing: .07em; }
 .summary-score .mine { color: var(--result, #ffbf35); }
 .summary-score .colon { color: #69738a; margin: 0 .22em; }
+.summary-points { --points-color: #ff687f; margin-bottom: 14px; padding: 12px 14px; border: 1px solid #ffffff24; border-radius: 8px; background: #ffffff06; }
+.summary-points[hidden] { display: none; }
+.summary-points[data-reached="true"] { --points-color: #37e69b; }
+.summary-points-line { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 12px; color: var(--points-color); font-variant-numeric: tabular-nums; }
+.summary-points-track { height: 5px; margin-top: 8px; border-radius: 5px; overflow: hidden; background: #ffffff18; }
+.summary-points-fill { height: 100%; transform-origin: left; background: var(--points-color); }
 .summary-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
 .summary-stat { background: #ffffff06; border: 1px solid #ffffff0b; border-radius: 8px; padding: 13px 5px; }
 .summary-stat b { display: block; font-size: 26px; font-weight: 750; font-variant-numeric: tabular-nums; }

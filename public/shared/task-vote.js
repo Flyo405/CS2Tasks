@@ -17,7 +17,7 @@ export function renderTaskVote(root, vote, now) {
       const row = document.createElement('div');
       row.className = 'task-vote-option';
       const command = document.createElement('b');
-      command.textContent = `!${index + 1}`;
+      command.textContent = index + 1;
       const label = document.createElement('span');
       label.dataset.userContent = '';
       label.textContent = option.title;

@@ -202,7 +202,9 @@ export function createServer(core, { recorder }) {
       stats: { kills: 24, deaths: 14, assists: 6, mvps: 3 }, headshots: 12, bestStreak: 7,
       bestRoundKills: 4, bonusPoints: 3450, taskCounts: { completed: 8, failed: 2, skipped: 1 },
     };
-    core.emitEvent({ kind: 'match_report', preview: true, report: { ...report, matchId: `preview-${Date.now()}`, endedAt: Date.now() } });
+    const goal = core.config.tasks.points.goal;
+    const points = report.points ?? (core.config.tasks.mode === 'points' ? { score: goal, goal, reached: true } : undefined);
+    core.emitEvent({ kind: 'match_report', preview: true, report: { ...report, points, matchId: `preview-${Date.now()}`, endedAt: Date.now() } });
   }));
 
   api.use((req, res) => res.status(404).json({ error: translate('Нет такого метода API', core.config.language) }));

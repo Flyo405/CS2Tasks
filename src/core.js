@@ -122,8 +122,8 @@ export class Core {
         }
       },
       announce: (options) => {
-        const title = this.config.language === 'en' ? 'Vote for 30 seconds' : 'Голосование на 30 секунд';
-        this.chat?.say(`${title} · ${options.map((option, index) => `!${index + 1} ${localizeTask(option, this.config.language).title}`).join(' · ')}`);
+        const title = this.config.language === 'en' ? 'Vote in the next 30 seconds by typing 1, 2, 3, or 4' : 'Голосование на 30 секунд. Напишите в чат 1, 2, 3 или 4';
+        this.chat?.say(`${title} · ${options.map((option, index) => `${index + 1}) ${localizeTask(option, this.config.language).title}`).join(' · ')}`);
       },
       onChange: () => this.changed(),
     });

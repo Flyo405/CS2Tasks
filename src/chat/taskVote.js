@@ -31,7 +31,7 @@ export class TaskVote {
 
   vote(message) {
     const { text, user } = message;
-    const choice = /^!([1-4])$/.exec(String(text ?? '').trim());
+    const choice = /^([1-4])$/.exec(String(text ?? '').trim());
     if (!choice) return false;
     if (!user || !this.poll || this.now() >= this.poll.endsAt || !this.canVote(message)) return true;
     const voter = user.toLowerCase();
